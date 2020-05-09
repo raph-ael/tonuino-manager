@@ -26,6 +26,12 @@
  * ```
  */
 
-import './index.css';
+import './css/index.css';
+import 'xel/xel.min';
+import app from './frontend/app';
+import './frontend/ui/_import';
+import '@fortawesome/fontawesome-free/js/all';
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
+$(document).ready(() => {
+    app.init();
+});

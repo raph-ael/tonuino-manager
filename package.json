@@ -76,6 +76,13 @@
     "style-loader": "^0.23.1"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "bootstrap": "^4.3.1",
+    "diskusage": "^1.1.3",
+    "drivelist": "^8.0.10",
+    "electron-squirrel-startup": "^1.0.0",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.14.4",
+    "xel": "0.0.220"
   }
 }
