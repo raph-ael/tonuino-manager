@@ -26,12 +26,10 @@
  * ```
  */
 
-import './css/index.css';
-import 'xel/xel.min';
-import app from './frontend/app';
-import './frontend/ui/_import';
+import './index.css';
 import '@fortawesome/fontawesome-free/js/all';
+import app from './frontend/app';
 
-$(document).ready(() => {
-    app.init();
-});
+
+app.init();
+

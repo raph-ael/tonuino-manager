@@ -1,30 +1,79 @@
-import router from "./router";
+import worker_api from "./worker_api";
+import device_select from "./ui/device_select";
+import folder_list from "./ui/folder_list";
 
-const app = {
+let app = {
 
-    $main: null,
-    $head: null,
-    $loader: null,
+    $page: null,
+    $page_loader: null,
+    $pane_main: null,
+    $pane_main_loader: null,
+    device: null,
 
     init: () => {
 
-        app.$main = $('#main');
-        app.$head = $('body > header');
-        app.$loader = $('#loading-indicator');
+        $('tbody').sortable();
 
-        router.initLinks();
-        router.loadPage('home');
+        app.$page = $('#fullpage');
+        app.$page_loader = $('#fullpage-loader');
+        app.$pane_main = $('#main-pane');
+        app.$pane_main_loader = $('#main-pane-loader');
+
+        /*
+         * initialisiere worker api
+         */
+        worker_api.init();
+
+        /*
+         * init device selector
+         */
+        device_select.init();
+
+        setTimeout(() => {
+            app.hideFullpageLoader();
+        },500);
+
 
     },
 
-    showLoading: () => {
-        app.$loader.show();
+    showMainLoader: () => {
+        app.$pane_main.hide();
+        app.$pane_main_loader.show();
     },
 
-    hideLoading: () => {
-        app.$loader.hide();
+    hideMainLoader: () => {
+        app.$pane_main.show();
+        app.$pane_main_loader.hide();
+    },
+
+    showFullpageLoader: () => {
+        app.$page_loader.css('display', 'table');
+        app.$page.hide();
+    },
+
+    hideFullpageLoader: () => {
+        app.$page_loader.css('display', 'none');
+        app.$page.show();
+    },
+
+    setDevice: (device) => {
+        app.device = device;
+    },
+
+
+    reload: () => {
+        app.showMainLoader();
+        worker_api.command('list_all', {
+            data: {
+                drive: app.device
+            },
+            success: (folder) => {
+
+                console.log(folder);
+
+            }
+        });
     }
-
 
 };
 

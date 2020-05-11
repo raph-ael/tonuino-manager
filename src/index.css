@@ -1,0 +1,10 @@
+@import "./css/photon.css";
+@import "./css/device_select.css";
+
+header {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+header .btn-group, header .btn {
+    -webkit-app-region: no-drag;
+}
