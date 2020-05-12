@@ -57,7 +57,7 @@ let filesystem = {
                             name: file,
                             file: file,
                             path: path.join(fullpath, file),
-                            track: null,
+                            track: '',
                             album: '',
                             artist: ''
                         };

@@ -27,16 +27,16 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   const workerWindow = new BrowserWindow({
-    show: true,
+    show: false,
     width: 800,
     height: 600,
     webPreferences: { nodeIntegration: true }
   });
 
-  workerWindow.webContents.openDevTools();
+  //workerWindow.webContents.openDevTools();
 
   workerWindow.loadURL(WORKER_WINDOW_WEBPACK_ENTRY);
 

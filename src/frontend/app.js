@@ -2,6 +2,7 @@ import worker_api from "./worker_api";
 import device_select from "./ui/device_select";
 import window_actions from "./ui/window_actions";
 import folder_list from "./ui/folder_list";
+import track_table from "./ui/track_table";
 
 let app = {
 
@@ -36,6 +37,11 @@ let app = {
         folder_list.init();
 
         /*
+         * Track-UI initialisieren
+         */
+        track_table.init();
+
+        /*
          * init device selector
          */
         device_select.init();
@@ -43,17 +49,7 @@ let app = {
         /*
          * autodetect sdcard
          */
-        app.autodetect_cd_card((device) => {
-
-            if(device === false) {
-                app.hideFullpageLoader();
-            }
-            else {
-                app.reload(() => {
-                    app.hideFullpageLoader();
-                });
-            }
-        });
+        app.hideFullpageLoader();
 
 
     },
@@ -126,6 +122,11 @@ let app = {
             }
         });
 
+    },
+
+    setFolder: (folder) => {
+        app.folder = folder;
+        track_table.setFolder(folder);
     }
 
 };

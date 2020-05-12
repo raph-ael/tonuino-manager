@@ -1,3 +1,5 @@
+import app from '../app';
+
 let folder_list = {
 
     $list: null,
@@ -63,7 +65,7 @@ let folder_list = {
         $li.click(() => {
             folder_list.$list.find('.active').removeClass('active');
             $li.addClass('active');
-            console.log(folder);
+            app.setFolder(folder);
         });
 
         return $li;

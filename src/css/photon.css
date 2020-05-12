@@ -682,6 +682,11 @@ textarea {
   min-width: 150px;
 }
 
+.pane-folder {
+  max-width: 300px;
+  min-width: 220px;
+}
+
 .pane-mini {
   width: 80px;
   flex: none;
