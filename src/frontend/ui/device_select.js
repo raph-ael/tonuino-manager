@@ -21,6 +21,10 @@ let device_select = {
 
     },
 
+    reload: () => {
+        device_select.initDevices();
+    },
+
     initDevices: () => {
 
         device_select.$list.empty();
@@ -39,7 +43,7 @@ let device_select = {
                     $li.click((ev) => {
                         device_select.$dropdown.hide();
                         device_select.dropdown_visible = false;
-                        device_select.$value.text(device.name);
+                        device_select.setDevice(device);
                         app.setDevice(device);
                         app.reload();
                     });
@@ -51,6 +55,10 @@ let device_select = {
             }
         });
 
+    },
+
+    setDevice: (device) => {
+        device_select.$value.text(device.name);
     },
 
     initEvents: () => {

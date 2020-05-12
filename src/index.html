@@ -161,6 +161,17 @@
 <div id="fullpage" class="window" style="display: none">
   <header class="toolbar toolbar-header">
     <h1 class="title">Tonuino Manager</h1>
+    <ul class="window-actions action-group">
+      <li class="action-button" data-action="maximize">
+        <span class="icon icon-plus"></span>
+      </li>
+      <li class="action-button" data-action="minimize">
+        <span class="icon icon-minus"></span>
+      </li>
+      <li class="action-button" data-action="close">
+        <span class="icon icon-cancel"></span>
+      </li>
+    </ul>
 
     <div class="toolbar-actions">
 
@@ -198,10 +209,10 @@
   <div class="window-content">
     <div id="main-pane" class="pane-group">
 
-      <div class="pane pane-sm sidebar">
+      <div class="pane sidebar">
 
-        <ul class="list-group">
-          <li><h5 class="nav-group-title">Ordner</h5></li>
+        <ul id="folder-list" class="list-group">
+
           <li class="list-group-item active">
             <img class="media-object pull-left" src="http://via.placeholder.com/32x32" width="32" height="32">
             <div class="media-body">

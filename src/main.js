@@ -30,13 +30,13 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 
   const workerWindow = new BrowserWindow({
-    show: false,
+    show: true,
     width: 800,
     height: 600,
     webPreferences: { nodeIntegration: true }
   });
 
-  //workerWindow.webContents.openDevTools();
+  workerWindow.webContents.openDevTools();
 
   workerWindow.loadURL(WORKER_WINDOW_WEBPACK_ENTRY);
 
@@ -46,6 +46,35 @@ const createWindow = () => {
 
   ipcMain.on('answer-from-worker', (event, arg) => {
     sendWindowMessage(mainWindow, 'answer-from-worker', arg);
+  });
+
+  /*
+   * Main Window Actions
+   */
+  ipcMain.on('mainwindow-action', (event, action) => {
+
+    switch (action) {
+
+      case 'close':
+        app.exit(0);
+        break;
+
+      case 'minimize':
+        mainWindow.minimize();
+        break;
+
+      case 'maximize':
+        if(mainWindow.isMaximized()) {
+          mainWindow.unmaximize();
+        }
+        else {
+          mainWindow.maximize();
+        }
+
+        break;
+
+    }
+
   });
 
 };

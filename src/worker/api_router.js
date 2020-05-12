@@ -37,11 +37,11 @@ let api_router = {
 
     },
 
-    list_all: (params, callback) => {
+    list_all: async (params, callback) => {
 
-        devices.listDirectoriesAndFiles(params.drive, (folders_and_files) => {
-            callback(folders_and_files);
-        });
+        let folders_and_files = await devices.listAll(params.drive);
+
+        callback(folders_and_files);
 
     }
 

@@ -789,6 +789,7 @@ img {
   font-size: 12px;
   font-weight: 500;
   color: #666666;
+  text-align: left;
 }
 
 @font-face {
