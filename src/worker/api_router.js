@@ -1,3 +1,5 @@
+import filesystem from "./filesystem";
+
 const { ipcRenderer } = require('electron');
 import devices from "./devices";
 
@@ -42,6 +44,16 @@ let api_router = {
         let folders_and_files = await devices.listAll(params.drive);
 
         callback(folders_and_files);
+
+    },
+
+    add_files: async (params, callback) => {
+
+        let copied_files = await filesystem.copyMp3sToFolder(params.files, params.folder);
+
+        let mp3s = await filesystem.getAllMp3FromFolder(params.folder.path);
+
+        callback(mp3s);
 
     }
 

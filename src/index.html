@@ -159,7 +159,7 @@
 </div>
 
 <div id="fullpage" class="window" style="display: none">
-  <header class="toolbar toolbar-header">
+  <header class="toolbar toolbar-header draggable">
     <h1 class="title">Tonuino Manager</h1>
     <ul class="window-actions action-group">
       <li class="action-button" data-action="maximize">
@@ -187,15 +187,20 @@
         </div>
       </div>
 
-
-      <button class="btn btn-default">
-        <span class="icon icon icon-folder icon-text"></span>
-        Ordner anlegen
-      </button>
-
-
-      <div class="btn-group pull-right">
+      <div style="display: none;" class="btn-group" id="btn-group-folder-options">
         <button class="btn btn-default">
+          <span class="icon icon icon-folder icon-text"></span>
+          Ordner anlegen
+        </button>
+        <button class="btn btn-default">
+          <span class="icon icon-feather"></span>
+          SD-Karte bereinigen
+        </button>
+      </div>
+
+
+      <div style="display: none;" id="btn-group-right" class="btn-group pull-right">
+        <button id="btn-add-files" class="btn btn-default">
           <span class="icon icon icon-plus-circled icon-text"></span>
           Dateien hinzufügen
         </button>
@@ -248,6 +253,7 @@
               <path id="steamL" d="M17 1C17 1 17 4.5 14 6.5C11 8.5 11 12 11 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="var(--secondary)"></path>
               <path id="steamR" d="M21 6C21 6 21 8.22727 19 9.5C17 10.7727 17 13 17 13" stroke="var(--secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
+            <p class="text-center status-message"></p>
           </div>
         </div>
 

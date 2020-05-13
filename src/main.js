@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { ipcMain } = require('electron');
+const { dialog } = require('electron');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -30,13 +31,13 @@ const createWindow = () => {
   //mainWindow.webContents.openDevTools();
 
   const workerWindow = new BrowserWindow({
-    show: false,
+    show: true,
     width: 800,
     height: 600,
     webPreferences: { nodeIntegration: true }
   });
 
-  //workerWindow.webContents.openDevTools();
+  workerWindow.webContents.openDevTools();
 
   workerWindow.loadURL(WORKER_WINDOW_WEBPACK_ENTRY);
 
@@ -77,6 +78,32 @@ const createWindow = () => {
 
   });
 
+  /*
+   * mp3 chooser dialog
+   */
+  ipcMain.on('open-mp3-chooser', async () => {
+    let files = await dialog.showOpenDialogSync(mainWindow, {
+      properties: ['openFile', 'multiSelections'],
+      filters: [{
+        name: 'MP3 Dateien',
+        extensions: ['mp3']
+      }],
+      buttonLabel: 'Kopieren'
+    });
+    if(files !== undefined) {
+      mainWindow.webContents.send('mp3s-choosed', files);
+    }
+
+  });
+
+  /*
+   * Status Meldungen
+   */
+  ipcMain.on('status-message', async (event, arg) => {
+
+    mainWindow.webContents.send('status-message', arg);
+
+  });
 };
 
 // This method will be called when Electron has finished

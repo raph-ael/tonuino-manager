@@ -19,7 +19,6 @@ let folder_list = {
     },
 
     setFolders: (folders) => {
-        console.log(folders);
 
         folder_list.$list.empty();
 

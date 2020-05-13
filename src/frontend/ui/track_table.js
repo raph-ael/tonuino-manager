@@ -1,3 +1,5 @@
+import app from '../app';
+
 let track_table = {
 
     $table: null,
@@ -10,19 +12,23 @@ let track_table = {
 
     },
 
-    setFolder: (folder) => {
+    reload: () => {
+        track_table.setFolder(app.folder);
+    },
 
-        console.log(folder);
+    setFolder: (folder) => {
 
         track_table.$tbody.empty();
 
-        folder.title.forEach((track) => {
+        if(folder) {
+            folder.title.forEach((track) => {
 
-            let $row = track_table.renderRow(track);
+                let $row = track_table.renderRow(track);
 
-            track_table.$tbody.append($row);
+                track_table.$tbody.append($row);
 
-        });
+            });
+        }
 
     },
 

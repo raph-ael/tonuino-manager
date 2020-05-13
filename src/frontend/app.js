@@ -3,6 +3,8 @@ import device_select from "./ui/device_select";
 import window_actions from "./ui/window_actions";
 import folder_list from "./ui/folder_list";
 import track_table from "./ui/track_table";
+import add_files from "./ui/add_files";
+const { ipcRenderer } = require('electron');
 
 let app = {
 
@@ -11,6 +13,10 @@ let app = {
     $pane_main: null,
     $pane_main_loader: null,
     device: null,
+    folder: null,
+    $btn_group_right: null,
+    $btn_group_folder_opt: null,
+    $header: null,
 
     init: () => {
 
@@ -20,6 +26,10 @@ let app = {
         app.$page_loader = $('#fullpage-loader');
         app.$pane_main = $('#main-pane');
         app.$pane_main_loader = $('#main-pane-loader');
+        app.$btn_group_right = $('#btn-group-right');
+        app.$btn_group_folder_opt = $('#btn-group-folder-options');
+        app.$header = $('#fullpage > header');
+        app.$status_message = app.$pane_main_loader.find('.status-message');
 
         /*
          * initialisiere window action buttons
@@ -47,14 +57,27 @@ let app = {
         device_select.init();
 
         /*
+         * init file add button
+         */
+        add_files.init();
+
+        /*
          * autodetect sdcard
          */
         app.hideFullpageLoader();
+
+        /*
+         * listen for status messages
+         */
+        ipcRenderer.on('status-message', (event, arg) => {
+            app.$status_message.text(arg.message);
+        });
 
 
     },
 
     showMainLoader: () => {
+        app.$status_message.text('');
         app.$pane_main.hide();
         app.$pane_main_loader.show();
     },
@@ -76,6 +99,12 @@ let app = {
 
     setDevice: (device) => {
         app.device = device;
+        if(device) {
+            app.$btn_group_folder_opt.show();
+        }
+        else {
+            app.$btn_group_folder_opt.hide();
+        }
     },
 
 
@@ -127,6 +156,18 @@ let app = {
     setFolder: (folder) => {
         app.folder = folder;
         track_table.setFolder(folder);
+        if(folder) {
+            app.$btn_group_right.show();
+        }
+        else {
+            app.$btn_group_right.hide();
+        }
+    },
+
+    setMp3sForFolder: (mp3s) => {
+        if(app.folder) {
+            app.folder.title = mp3s;
+        }
     }
 
 };

@@ -4,6 +4,7 @@ const disk = require('diskusage');
 import helper from "../helper";
 import fs from 'fs';
 import filesystem from "./filesystem";
+const { ipcRenderer } = require('electron');
 
 let devices = {
 
@@ -45,7 +46,11 @@ let devices = {
             other: []
         };
 
+        let i = 0;
+
         await helper.asyncForEach(files, async (file) => {
+
+            i++;
 
             let folder = {
                 name: file,
@@ -54,10 +59,18 @@ let devices = {
                 folder_name: file,
                 title: [],
                 type: 'other',
-                filetype: null
+                filetype: null,
+                path: path.join(drive.path, file)
             };
 
             if(fs.lstatSync(path.join(drive.path, file)).isDirectory()) {
+
+                /*
+                 * sende status an main
+                 */
+                ipcRenderer.send('status-message', {
+                    message: '(' + i + '/' + files.length + ') Lese Ordner ' + file + ''
+                });
 
                 folder.filetype = 'folder';
 
@@ -65,7 +78,9 @@ let devices = {
                     folder.number = parseInt(file);
                     if (folder.number > 0) {
                         folder.type = 'tonuino_folder';
-                        folder.title = await filesystem.getAllMp3FromFolder(path.join(drive.path, file));
+                        folder.title = await filesystem.getAllMp3FromFolder(path.join(drive.path, file),{
+                            status: false
+                        });
 
                         let folder_names = await devices.getNamesFromTracks(folder.title);
                         folder.artists = folder_names.artists;

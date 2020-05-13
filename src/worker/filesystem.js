@@ -5,6 +5,7 @@ const FileType = require('file-type');
 const util = require('util');
 import helper from "../helper";
 const mm = require('musicmetadata');
+const { ipcRenderer } = require('electron');
 
 
 const readdir = util.promisify(fs.readdir);
@@ -33,7 +34,14 @@ let filesystem = {
 
     },
 
-    getAllMp3FromFolder: async (fullpath) => {
+    getAllMp3FromFolder: async (fullpath, options) => {
+
+        if(options === undefined) {
+            options = {};
+        }
+        if(options.status === undefined) {
+            options.status = false;
+        }
 
         let files = [];
         let mp3s = [];
@@ -79,6 +87,15 @@ let filesystem = {
                             }
                         }
 
+                        /*
+                         * sende status an main
+                         */
+                        if(options.status) {
+                            ipcRenderer.send('status-message', {
+                                message: 'Lese ' + file + '<br>' + track.name + ' - ' + track.artist
+                            });
+                        }
+
                         mp3s.push(track);
                     }
                 }
@@ -91,6 +108,66 @@ let filesystem = {
 
         return false;
 
+    },
+
+    copyMp3sToFolder: async (files, folder) => {
+
+        let out = [];
+
+        let i = 0;
+
+        await helper.asyncForEach(files, async (file) => {
+
+            i++;
+
+            /*
+             * sende status an main
+             */
+            ipcRenderer.send('status-message', {
+                message: '(' + i + '/' + files.length + ') Kopiere ' + path.basename(file)
+            });
+
+            let new_number = await filesystem.getNextFreeFileNumber(folder.path);
+            let new_filename = ('000' + new_number).slice(-3) + '.mp3';
+            let new_path = path.join(folder.path, new_filename);
+            await fs.copyFileSync(file, new_path);
+
+            out.push(new_path);
+
+        });
+
+        return out;
+
+    },
+
+    getNextFreeFileNumber: async (path) => {
+        let files;
+
+        try {
+            files = await readdir(path);
+        } catch (err) {
+            console.log(err);
+        }
+        if (files === undefined) {
+            console.log('undefined');
+        } else {
+
+            files.sort();
+
+            let highest_number = 0;
+
+            await helper.asyncForEach(files, async (file) => {
+                if(file.indexOf('.mp3') !== -1) {
+                    let number = parseInt(file.split('.mp3')[0]);
+                    if(number > highest_number) {
+                        highest_number = number;
+                    }
+                }
+            });
+
+            return (highest_number+1);
+
+        }
     }
 
 };

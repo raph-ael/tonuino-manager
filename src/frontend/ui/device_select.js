@@ -45,6 +45,7 @@ let device_select = {
                         device_select.dropdown_visible = false;
                         device_select.setDevice(device);
                         app.setDevice(device);
+                        app.setFolder(null);
                         app.reload();
                     });
 
