@@ -30,6 +30,5 @@ import './index.css';
 import '@fortawesome/fontawesome-free/js/all';
 import app from './frontend/app';
 
-
 app.init();
 

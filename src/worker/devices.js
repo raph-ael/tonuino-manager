@@ -60,7 +60,8 @@ let devices = {
                 title: [],
                 type: 'other',
                 filetype: null,
-                path: path.join(drive.path, file)
+                path: path.join(drive.path, file),
+                image: null
             };
 
             if(fs.lstatSync(path.join(drive.path, file)).isDirectory()) {
@@ -68,18 +69,19 @@ let devices = {
                 /*
                  * sende status an main
                  */
-                ipcRenderer.send('status-message', {
-                    message: '(' + i + '/' + files.length + ') Lese Ordner ' + file + ''
-                });
+                let status_message = '(' + i + '/' + files.length + ') Lese Ordner ' + file + '';
 
                 folder.filetype = 'folder';
 
                 if (file.length === 2) {
                     folder.number = parseInt(file);
                     if (folder.number > 0) {
+
+                        folder.image = await filesystem.getFirstAlbumArtCover(path.join(drive.path, file), file);
                         folder.type = 'tonuino_folder';
                         folder.title = await filesystem.getAllMp3FromFolder(path.join(drive.path, file),{
-                            status: false
+                            status: true,
+                            status_text: status_message
                         });
 
                         let folder_names = await devices.getNamesFromTracks(folder.title);

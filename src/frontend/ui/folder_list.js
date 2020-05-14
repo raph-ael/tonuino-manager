@@ -51,9 +51,14 @@ let folder_list = {
             title += '<br>' + folder.artists.join(', ');
         }
 
+        let image_src = 'coverart://placeholder.png';
+        if(folder.image) {
+            image_src = 'coverart://' + folder.image;
+        }
+
         let $li = $(`
             <li class="list-group-item">
-            <img class="media-object pull-left" src="http://via.placeholder.com/52x52" width="52" height="52">
+            <img class="media-object pull-left" src="` + image_src + `" width="52" height="52">
             <div class="media-body">
               <strong>` + folder.folder_name + `</strong> <span class="pull-right">` + folder.title.length + ` Titel</span>
               <p>` + title + `</p>

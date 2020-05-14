@@ -175,26 +175,45 @@
 
     <div class="toolbar-actions">
 
-      <button id="device-select" class="btn btn-default btn-dropdown">
-        <span class="icon icon-drive icon-text"></span>
-        <span class="display-value">SD-Karte wählen...</span>
-      </button>
-      <div id="device-dropdown" class="dropdown-content">
-        <div class="pane pane-sm sidebar">
-          <ul class="list-group">
+      <div class="btn-group">
+        <button id="device-select" class="btn btn-default btn-dropdown">
+          <span class="icon icon-drive icon-text"></span>
+          <span class="display-value">SD-Karte wählen...</span>
+        </button>
+        <div id="device-dropdown" class="dropdown-content">
+          <div class="pane pane-sm sidebar">
+            <ul class="list-group">
 
-          </ul>
+            </ul>
+          </div>
         </div>
+        <button id="devices-refresh" class="btn btn-default">
+          <span class="icon icon-arrows-ccw"></span>
+        </button>
       </div>
 
       <div style="display: none;" class="btn-group" id="btn-group-folder-options">
-        <button class="btn btn-default">
-          <span class="icon icon icon-folder icon-text"></span>
-          Ordner anlegen
+
+        <button id="new-select" class="btn btn-default btn-dropdown">
+          <span class="icon icon-plus"></span>
+          <span class="icon-text">Neuer Ordner...</span>
         </button>
+        <div id="new-dropdown" class="dropdown-content">
+          <div class="pane pane-sm sidebar">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="icon icon-folder icon-text"></span> Neuen Ordner anlegen</strong>
+              </li>
+              <li class="list-group-item">
+                <span class="icon icon-folder icon-text"></span> Ordner mit kopieren</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <button class="btn btn-default">
           <span class="icon icon-feather"></span>
-          SD-Karte bereinigen
+          SD-Karte säubern
         </button>
       </div>
 

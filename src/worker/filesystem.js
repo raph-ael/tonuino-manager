@@ -6,13 +6,26 @@ const util = require('util');
 import helper from "../helper";
 const mm = require('musicmetadata');
 const { ipcRenderer } = require('electron');
-
+const electron = require('electron');
 
 const readdir = util.promisify(fs.readdir);
 
 const metadata = util.promisify(mm);
 
 let filesystem = {
+
+    path_data: null,
+    path_user: null,
+    path_coverart: null,
+
+    init: async () => {
+        filesystem.path_data = electron.remote.app.getPath('appData');
+        filesystem.path_user = electron.remote.app.getPath('userData');
+        filesystem.path_coverart = path.join(filesystem.path_user, 'coverart');
+        if (!await fs.existsSync(filesystem.path_coverart)) {
+            await fs.mkdirSync(filesystem.path_coverart);
+        }
+    },
 
     list: async (fullpath) => {
 
@@ -91,8 +104,15 @@ let filesystem = {
                          * sende status an main
                          */
                         if(options.status) {
+
+                            let message = '';
+                            if(options.status_text !== undefined) {
+                                message = options.status_text + ' ';
+                            }
+                            message += file + '<br>' + track.name + ' - ' + track.artist;
+
                             ipcRenderer.send('status-message', {
-                                message: 'Lese ' + file + '<br>' + track.name + ' - ' + track.artist
+                                message: message
                             });
                         }
 
@@ -168,8 +188,56 @@ let filesystem = {
             return (highest_number+1);
 
         }
-    }
+    },
 
+    getFirstAlbumArtCover: async (fullpath, foldername) => {
+
+        let files;
+
+        try {
+            files = await readdir(fullpath);
+        } catch (err) {
+            console.log(err);
+        }
+        if (files === undefined) {
+            console.log('undefined');
+        } else {
+
+            files.sort();
+
+            let image = null;
+
+            await helper.asyncForEach(files, async (file) => {
+                if(file.indexOf('.mp3') !== -1) {
+
+                    if(!image) {
+
+                        let meta = await metadata(fs.createReadStream(path.join(fullpath, file)));
+
+                        if(meta && meta.picture && meta.picture.length > 0) {
+
+                            console.log(meta.picture);
+
+                            try {
+
+                                let imagename = foldername + '.' + meta.picture[0].format;
+
+                                await fs.writeFileSync(path.join(filesystem.path_coverart, imagename), meta.picture[0].data);
+
+                                image = imagename;
+
+                            } catch (err) {
+                                console.log(err);
+                                image = null;
+                            }
+                        }
+                    }
+                }
+            });
+
+            return image;
+        }
+    }
 };
 
 export default filesystem;

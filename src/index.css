@@ -30,3 +30,6 @@ header .btn-group, header .btn {
 .window-actions > li:hover {
     opacity: 1;
 }
+.dropdown-content .list-group-item {
+    padding: 6px 10px;
+}

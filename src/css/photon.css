@@ -2358,3 +2358,10 @@ td:last-child {
   flex: none;
   padding: 3px 10px;
 }
+
+/*
+ * Fixes
+ */
+.btn-group > .btn-dropdown ~ .btn {
+  margin-left: -1px;
+}

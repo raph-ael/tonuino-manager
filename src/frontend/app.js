@@ -4,7 +4,10 @@ import window_actions from "./ui/window_actions";
 import folder_list from "./ui/folder_list";
 import track_table from "./ui/track_table";
 import add_files from "./ui/add_files";
+import dropdowns from "./ui/dropdowns";
+import helper from "../helper";
 const { ipcRenderer } = require('electron');
+const electron = require('electron');
 
 let app = {
 
@@ -17,6 +20,8 @@ let app = {
     $btn_group_right: null,
     $btn_group_folder_opt: null,
     $header: null,
+    path_user: null,
+    path_data: null,
 
     init: () => {
 
@@ -30,6 +35,12 @@ let app = {
         app.$btn_group_folder_opt = $('#btn-group-folder-options');
         app.$header = $('#fullpage > header');
         app.$status_message = app.$pane_main_loader.find('.status-message');
+
+        /*
+         * pfade
+         */
+        app.path_data = electron.remote.app.getPath('appData');
+        app.path_user = electron.remote.app.getPath('userData');
 
         /*
          * initialisiere window action buttons
@@ -52,25 +63,30 @@ let app = {
         track_table.init();
 
         /*
-         * init device selector
-         */
-        device_select.init();
-
-        /*
          * init file add button
          */
         add_files.init();
 
         /*
-         * autodetect sdcard
+         * dropdown
          */
-        app.hideFullpageLoader();
+        dropdowns.init();
+
+        /*
+         * init device selector
+         */
+        device_select.init(() => {
+            /*
+             * autodetect sdcard
+             */
+            app.hideFullpageLoader();
+        });
 
         /*
          * listen for status messages
          */
         ipcRenderer.on('status-message', (event, arg) => {
-            app.$status_message.text(arg.message);
+            app.$status_message.html(arg.message);
         });
 
 
@@ -126,31 +142,6 @@ let app = {
 
             }
         });
-    },
-
-    autodetect_cd_card: (callback) => {
-
-        /*
-         * timeout
-         */
-        let timeout = setTimeout(() => {
-            callback(false);
-        }, 5000);
-
-        worker_api.command('list_devices', {
-            success: (devices) => {
-
-                devices.forEach((device) => {
-                    if(device.size < 35433480192) {
-                        clearTimeout(timeout);
-                        device_select.setDevice(device);
-                        app.setDevice(device);
-                        callback(device);
-                    }
-                });
-            }
-        });
-
     },
 
     setFolder: (folder) => {

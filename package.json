@@ -59,6 +59,11 @@
                   "html": "./src/worker.html",
                   "js": "./src/worker.js",
                   "name": "worker_window"
+                },
+                {
+                  "html": "./src/new_folder.html",
+                  "js": "./src/new_folder.js",
+                  "name": "new_folder_window"
                 }
               ]
             }
@@ -73,6 +78,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.51",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
     "@electron-forge/maker-zip": "^6.0.0-beta.51",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.0.0-beta.51",
     "@electron-forge/plugin-webpack": "^6.0.0-beta.51",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "css-loader": "^3.5.3",
@@ -88,8 +94,11 @@
     "electron-squirrel-startup": "^1.0.0",
     "file-type": "^14.3.0",
     "glob": "^7.1.6",
+    "image-thumbnail": "^1.0.8",
+    "jimp": "^0.10.3",
     "jquery": "^3.5.1",
     "jquery-ui-dist": "^1.12.1",
-    "musicmetadata": "^2.0.5"
+    "musicmetadata": "^2.0.5",
+    "tmp": "^0.2.1"
   }
 }

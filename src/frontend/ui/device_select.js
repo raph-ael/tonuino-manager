@@ -1,23 +1,30 @@
 import worker_api from "../worker_api";
 import app from '../app';
+import helper from '../../helper';
 
 let device_select = {
 
     $select: null,
     $dropdown: null,
     $list: null,
-    dropdown_visible: false,
     $value: null,
+    $devices_refresh: null,
+    $devices_refresh_icon: null,
 
-    init: () => {
+    init: (callback) => {
 
         device_select.$select = $('#device-select');
         device_select.$dropdown = $('#device-dropdown');
         device_select.$list = device_select.$dropdown.find('.list-group');
         device_select.$value = device_select.$select.find('.display-value');
+        device_select.$devices_refresh = $('#devices-refresh');
+        device_select.$devices_refresh_icon = device_select.$devices_refresh.find('.icon');
 
         device_select.initEvents();
-        device_select.initDevices();
+        device_select.initDevices({
+            autoselect: true,
+            callback: callback
+        });
 
     },
 
@@ -25,14 +32,21 @@ let device_select = {
         device_select.initDevices();
     },
 
-    initDevices: () => {
+    initDevices: (options) => {
+
+        options = $.extend({},{
+            autoselect: false,
+            callback: null
+        }, options);
 
         device_select.$list.empty();
 
-        worker_api.command('list_devices', {
-            success: (devices) => {
+        device_select.$devices_refresh_icon.addClass('fa-spin');
 
-                devices.forEach((device) => {
+        worker_api.command('list_devices', {
+            success: async (devices) => {
+
+                await helper.asyncForEach(devices, async (device) => {
 
                     let $li = $(`
                         <li class="list-group-item">
@@ -40,9 +54,15 @@ let device_select = {
                         </li>
                     `);
 
+                    /*
+                     * wenn <= 32GB gehen wir von einer SD-Karte aus
+                     */
+                    if(device.size < 35433480192) {
+                        $li.addClass('maybe-tonuino-drive');
+                    }
+
                     $li.click((ev) => {
                         device_select.$dropdown.hide();
-                        device_select.dropdown_visible = false;
                         device_select.setDevice(device);
                         app.setDevice(device);
                         app.setFolder(null);
@@ -50,9 +70,25 @@ let device_select = {
                     });
 
                     device_select.$list.append($li);
-
                 });
 
+                /*
+                 * wähle ausomatisch erste gefundene tonuino karte
+                 */
+                let $li_tonuino = device_select.$list.find('.maybe-tonuino-drive');
+                if(options.autoselect && $li_tonuino.length > 0) {
+                    $li_tonuino.first().trigger('click');
+                }
+                if(options.callback) {
+                    options.callback(devices);
+                }
+
+                /*
+                 * mini lade animation stoppen
+                 */
+                setTimeout(() => {
+                    device_select.$devices_refresh_icon.removeClass('fa-spin');
+                }, 800);
             }
         });
 
@@ -64,28 +100,8 @@ let device_select = {
 
     initEvents: () => {
 
-        device_select.$select.click((ev) => {
-
-            if(device_select.$dropdown.is(':visible')) {
-                device_select.$dropdown.hide();
-                device_select.dropdown_visible = false;
-            }
-            else {
-                device_select.$dropdown.show();
-                device_select.dropdown_visible = true;
-            }
-        });
-
-        $(document).mouseup((e) => {
-
-            if(
-                device_select.dropdown_visible === true &&
-                ( !device_select.$dropdown.is(e.target) && device_select.$dropdown.has(e.target).length === 0 ) &&
-                ( !device_select.$select.is(e.target) && device_select.$select.has(e.target).length === 0 )
-            ) {
-                device_select.$dropdown.hide();
-                device_select.dropdown_visible = false;
-            }
+        device_select.$devices_refresh.click(() => {
+            device_select.initDevices();
         });
 
 

@@ -1,5 +1,5 @@
 import filesystem from "./filesystem";
-
+const electron = require('electron');
 const { ipcRenderer } = require('electron');
 import devices from "./devices";
 
