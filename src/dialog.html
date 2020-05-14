@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photon</title>
+</head>
+<body>
+
+
+<header class="toolbar toolbar-header">
+    <h1 class="title" id="title">Header with actions</h1>
+</header>
+<div class="window-content" style="min-height: 183px;">
+    <div class="pane padded-more">
+        <p><strong id="message"></strong></p>
+        <p id="detail"></p>
+    </div>
+</div>
+<footer class="toolbar toolbar-footer">
+    <div class="toolbar-actions">
+        <button data-answer="1" id="button_0" style="display: none" class="btn btn-default">
+            Cancel
+        </button>
+
+        <button data-answer="2" id="button_1" style="display: none" class="btn btn-primary pull-right">
+            Save
+        </button>
+    </div>
+</footer>
+<script>window.$ = window.jQuery = require('jquery');</script>
+</body>

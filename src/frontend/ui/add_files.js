@@ -1,6 +1,7 @@
 import app from '../app';
 import worker_api from "../worker_api";
 import track_table from "./track_table";
+import folder_list from "./folder_list";
 const { ipcRenderer } = require('electron');
 
 let add_files = {
@@ -38,6 +39,8 @@ let add_files = {
     add: (files) => {
         if(files && files.length > 0) {
 
+            files.sort();
+
             app.showMainLoader();
 
             worker_api.command('add_files', {
@@ -45,10 +48,13 @@ let add_files = {
                     files: files,
                     folder: app.folder
                 },
-                success: (mp3s) => {
+                success: (response) => {
 
-                    app.setMp3sForFolder(mp3s);
-                    track_table.reload();
+                    console.log(response);
+                    app.setMp3sForFolder(response.folder.title);
+                    app.setFolder(response.folder);
+                    folder_list.replaceFolder(response.folder);
+                    folder_list.activateFolder(response.folder.folder_name);
                     app.hideMainLoader();
 
                 }

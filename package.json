@@ -61,9 +61,9 @@
                   "name": "worker_window"
                 },
                 {
-                  "html": "./src/new_folder.html",
-                  "js": "./src/new_folder.js",
-                  "name": "new_folder_window"
+                  "html": "./src/dialog.html",
+                  "js": "./src/dialog.js",
+                  "name": "dialog_window"
                 }
               ]
             }
@@ -100,6 +100,7 @@
     "jquery": "^3.5.1",
     "jquery-ui-dist": "^1.12.1",
     "musicmetadata": "^2.0.5",
+    "rimraf": "^3.0.2",
     "tmp": "^0.2.1"
   }
 }

@@ -7,6 +7,7 @@ import helper from "../helper";
 const mm = require('musicmetadata');
 const { ipcRenderer } = require('electron');
 const electron = require('electron');
+const rimraf = require('rimraf');
 
 const readdir = util.promisify(fs.readdir);
 
@@ -289,8 +290,36 @@ let filesystem = {
             return folder;
 
         }
+    },
 
+    removeAll: async (fullpath) => {
 
+        return await rimraf.sync(fullpath);
+
+    },
+
+    /*
+     * Sortiert mp3s in einem Ordner nach 001.mp3 002.mp3 ...
+     */
+    mp3Sorter: async (fullpath) => {
+
+        let mp3s = await filesystem.list(fullpath);
+
+        mp3s.sort();
+
+        let i = 0;
+
+        await helper.asyncForEach(mp3s, async (mp3) => {
+
+            i++;
+
+            let should_filename = ('000' + i).slice(-3) + '.mp3';
+
+            if(mp3 !== should_filename) {
+                await fs.renameSync(path.join(fullpath, mp3), path.join(fullpath, should_filename));
+            }
+
+        });
 
     }
 };

@@ -192,41 +192,29 @@
         </button>
       </div>
 
-      <div style="display: none;" class="btn-group" id="btn-group-folder-options">
+      <button class="btn btn-default" id="btn-purge">
+        <span class="icon icon-feather icon-text"></span>
+        SD-Karte säubern
+      </button>
 
-        <button id="new-select" class="btn btn-default btn-dropdown">
-          <span class="icon icon-plus"></span>
-          <span class="icon-text">Neuer Ordner...</span>
-        </button>
-        <div id="new-dropdown" class="dropdown-content">
-          <div class="pane pane-sm sidebar">
-            <ul class="list-group">
-              <li class="list-group-item" id="btn-create-new-folder">
-                <span class="icon icon-folder icon-text"></span> Neuen Ordner anlegen</strong>
-              </li>
-              <li class="list-group-item" id="btn-copy-folders">
-                <span class="icon icon-folder icon-text"></span> Ordner kopieren</strong>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <button class="btn btn-default">
-          <span class="icon icon-feather"></span>
-          SD-Karte säubern
-        </button>
-      </div>
+      <button class="btn btn-default" id="btn-create-new-folder">
+        <span class="icon icon-folder icon-text"></span>
+        <span class="icon-text">Neuer Ordner</span>
+      </button>
 
 
-      <div style="display: none;" id="btn-group-right" class="btn-group pull-right">
-        <button id="btn-add-files" class="btn btn-default">
-          <span class="icon icon icon-plus-circled icon-text"></span>
-          Dateien hinzufügen
-        </button>
-        <button class="btn btn-default">
-          <span class="icon icon icon-trash"></span>
-        </button>
-      </div>
+      <button style="display: none;" class="btn btn-default" id="btn-remove-folder">
+        <span class="icon icon-trash"></span>
+        Ordner löschen
+      </button>
+
+
+
+
+      <button style="display: none;" id="btn-add-files" class="pull-right btn btn-default">
+        <span class="icon icon icon-plus-circled icon-text"></span>
+        Dateien hinzufügen
+      </button>
 
     </div>
   </header>

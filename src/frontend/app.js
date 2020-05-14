@@ -7,6 +7,9 @@ import add_files from "./ui/add_files";
 import dropdowns from "./ui/dropdowns";
 import helper from "../helper";
 import new_folder from "./ui/new_folder";
+import purge from "./ui/purge";
+import dialog from "./dialog";
+import remove_folder from "./ui/remove_folder";
 const { ipcRenderer } = require('electron');
 const electron = require('electron');
 
@@ -26,13 +29,11 @@ let app = {
 
     init: () => {
 
-        $('tbody').sortable();
-
         app.$page = $('#fullpage');
         app.$page_loader = $('#fullpage-loader');
         app.$pane_main = $('#main-pane');
         app.$pane_main_loader = $('#main-pane-loader');
-        app.$btn_group_right = $('#btn-group-right');
+        app.$btn_group_right = $('#btn-add-files');
         app.$btn_group_folder_opt = $('#btn-group-folder-options');
         app.$header = $('#fullpage > header');
         app.$status_message = app.$pane_main_loader.find('.status-message');
@@ -77,6 +78,21 @@ let app = {
          * Neuer Ordner Button
          */
         new_folder.init();
+
+        /*
+         * SD Karte säubern Button
+         */
+        purge.init();
+
+        /*
+         * Dialog Fenster
+         */
+        dialog.init();
+
+        /*
+         * Ordner lösche Button
+         */
+        remove_folder.init();
 
         /*
          * init device selector
@@ -154,9 +170,11 @@ let app = {
         track_table.setFolder(folder);
         if(folder) {
             app.$btn_group_right.show();
+            folder_list.$btn_remove_folder.show();
         }
         else {
             app.$btn_group_right.hide();
+            folder_list.$btn_remove_folder.hide();
         }
     },
 

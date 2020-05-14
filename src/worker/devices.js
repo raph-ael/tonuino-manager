@@ -121,6 +121,102 @@ let devices = {
             artists: artists,
             albums: albums
         }
+    },
+
+    purge: async (drive) => {
+
+        let files = await filesystem.list(drive.path);
+
+        let allowed = ['mp3'];
+
+        for(let i=1;i<=99;i++) {
+            allowed.push(('00'+i).slice(-2))
+        }
+
+        await helper.asyncForEach(files, async (file) => {
+
+            let current_path = path.join(drive.path, file);
+
+            if(fs.lstatSync(current_path).isDirectory()) {
+
+                /*
+                 * wenn Ordnername nicht erlaubt ist Verzeichnis rekursiv löschen
+                 */
+                if(allowed.indexOf(file) === -1) {
+                    await filesystem.removeAll(current_path);
+                }
+                /*
+                 * ansonsten alle Dateien ausser mp3s im Ordner löschen
+                 */
+                else {
+                    let mp3s = await filesystem.list(current_path);
+
+                    await helper.asyncForEach(mp3s, async (mp3) => {
+
+                        let file_extension = mp3.split('.').pop();
+
+                        if(file_extension !== 'mp3') {
+                            await filesystem.removeAll(path.join(current_path, mp3));
+                        }
+
+                    });
+
+                    /*
+                     * Ordner löschen wenn er leer ist
+                     */
+                    mp3s = await filesystem.list(current_path);
+                    if(mp3s.length === 0) {
+                        await filesystem.removeAll(current_path);
+                    }
+                    /*
+                     * Mp3s sortieren, falls eine Nummer fehlt
+                     */
+                    else {
+                        await filesystem.mp3Sorter(current_path);
+                    }
+                }
+            }
+            /*
+             * wenn nicht Datei löschen
+             */
+            else {
+                await fs.unlinkSync(current_path);
+            }
+
+        });
+
+        await devices.folderSorter(drive.path);
+    },
+
+    /*
+     * sortiert Ordner der 1. Ebene 01-99
+     */
+    folderSorter: async (fullpath) => {
+
+        let folders = await filesystem.list(fullpath);
+
+        folders.sort();
+
+        let i = 0;
+
+        await helper.asyncForEach(folders, async (folder) => {
+
+            /*
+             * system Ordner ausblenden
+             */
+            if(devices.tonuino_system_folders.indexOf(folder) === -1) {
+                i++;
+
+                let should_foldername = ('00' + i).slice(-2);
+
+                if(folder !== should_foldername) {
+                    await fs.renameSync(path.join(fullpath, folder), path.join(fullpath, should_foldername));
+                }
+            }
+        });
+
+        return await filesystem.list(fullpath);
+
     }
 };
 

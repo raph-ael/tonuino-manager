@@ -3,9 +3,11 @@ import app from '../app';
 let folder_list = {
 
     $list: null,
+    $btn_remove_folder: null,
 
     init: () => {
         folder_list.$list = $('#folder-list');
+        folder_list.$btn_remove_folder = $('#btn-remove-folder');
         folder_list.setTitle('Ordner');
     },
 
@@ -85,9 +87,31 @@ let folder_list = {
 
     },
 
+    activateLast: () => {
+        folder_list.$list.find('.list-folder-tonuino').last().trigger('click');
+    },
+
+    activateFirst: () => {
+        folder_list.$list.find('.list-folder-tonuino').first().trigger('click');
+    },
+
+    removeFolder: (folder) => {
+        folder_list.$list.find('.list-folder-tonuino-' + folder.folder_name).remove();
+    },
+
+    replaceFolder: (folder) => {
+        folder_list.$list.find('.list-folder-tonuino-' + folder.folder_name).replaceWith(folder_list.renderTonuinoFolder(folder));
+    },
+
     addFolder: (folder, type) => {
         console.log(folder);
-        folder_list.$list.find('.list-folder-tonuino').last().after(folder_list.renderTonuinoFolder(folder));
+        if(folder_list.$list.find('.list-folder-tonuino').length > 0) {
+            folder_list.$list.find('.list-folder-tonuino').last().after(folder_list.renderTonuinoFolder(folder));
+        }
+        else {
+            folder_list.$list.find('.title').first().after(folder_list.renderTonuinoFolder(folder));
+        }
+
     },
 
     renderSystemFolder: (folder) => {
