@@ -26,12 +26,19 @@ const registerProtocols = () => {
   protocol.registerFileProtocol('coverart', (request, callback) => {
     const url = request.url.split('coverart://')[1].trim();
     callback({
-      path: app.getPath('userData') + '/coverart/' + url
+      path: path.normalize(app.getPath('userData') + '/coverart/' + url)
     });
 
   }, (error) => {
     if (error) console.error('Failed to register protocol')
   });
+
+  protocol.interceptFileProtocol('static', (request, callback) => {
+    const url = request.url.substr(9)    /* all urls start with 'file://' */
+    callback({ path: path.normalize(`${__dirname}/static/${url}`)})
+  }, (err) => {
+    if (err) console.error('Failed to register protocol')
+  })
 
 };
 

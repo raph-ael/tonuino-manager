@@ -1,4 +1,7 @@
 const rules = require('./webpack.rules');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const assets = [ 'static' ];
+const path = require('path');
 
 rules.push({
   test: /\.css$/,
@@ -17,4 +20,12 @@ module.exports = {
   module: {
     rules,
   },
+  plugins: assets.map(asset => {
+    return new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, 'src', asset),
+        to: path.resolve(__dirname, '.webpack/main', asset)
+      }
+    ]);
+  })
 };

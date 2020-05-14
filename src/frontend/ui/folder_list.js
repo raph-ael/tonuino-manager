@@ -51,13 +51,13 @@ let folder_list = {
             title += '<br>' + folder.artists.join(', ');
         }
 
-        let image_src = 'coverart://placeholder.png';
+        let image_src = 'static://img/cover_placeholder.png';
         if(folder.image) {
             image_src = 'coverart://' + folder.image;
         }
 
         let $li = $(`
-            <li class="list-group-item">
+            <li class="list-group-item list-folder-tonuino list-folder-tonuino-` + folder.folder_name + `">
             <img class="media-object pull-left" src="` + image_src + `" width="52" height="52">
             <div class="media-body">
               <strong>` + folder.folder_name + `</strong> <span class="pull-right">` + folder.title.length + ` Titel</span>
@@ -74,6 +74,20 @@ let folder_list = {
 
         return $li;
 
+    },
+
+    activateFolder: (folder_name) => {
+
+        let $li = folder_list.$list.find('.list-folder-tonuino-' + folder_name);
+        folder_list.$list.parent().scrollTop(0);
+        folder_list.$list.parent().scrollTop($li.position().top);
+        $li.trigger('click');
+
+    },
+
+    addFolder: (folder, type) => {
+        console.log(folder);
+        folder_list.$list.find('.list-folder-tonuino').last().after(folder_list.renderTonuinoFolder(folder));
     },
 
     renderSystemFolder: (folder) => {

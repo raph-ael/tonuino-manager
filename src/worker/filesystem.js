@@ -237,6 +237,61 @@ let filesystem = {
 
             return image;
         }
+    },
+
+    newFolder: async (fullpath) => {
+
+        let files;
+
+        try {
+            files = await readdir(fullpath);
+        } catch (err) {
+            console.log(err);
+        }
+        if (files === undefined) {
+            console.log('undefined');
+        } else {
+
+            files.sort();
+
+            let highest_folder_number = 0;
+
+            await helper.asyncForEach(files, async (file) => {
+
+                if(fs.lstatSync(path.join(fullpath, file)).isDirectory()) {
+
+                    if (file.length === 2) {
+                        let number = parseInt(file);
+                        if (highest_folder_number < number) {
+                            highest_folder_number = number;
+                        }
+                    }
+                }
+            });
+
+            let new_number = (highest_folder_number+1);
+            let new_folder_name = ('00' + new_number).slice(-2);
+
+            await fs.mkdirSync(path.join(fullpath, new_folder_name));
+
+            let folder = {
+                name: new_folder_name,
+                artists: [],
+                albums: [],
+                folder_name: new_folder_name,
+                title: [],
+                type: 'other',
+                filetype: null,
+                path: path.join(fullpath, new_folder_name),
+                image: null
+            };
+
+            return folder;
+
+        }
+
+
+
     }
 };
 

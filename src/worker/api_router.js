@@ -55,6 +55,14 @@ let api_router = {
 
         callback(mp3s);
 
+    },
+
+    new_folder: async (params, callback) => {
+
+        let folder = await filesystem.newFolder(params.drive.path);
+
+        callback(folder);
+
     }
 
 };

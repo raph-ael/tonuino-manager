@@ -6,6 +6,7 @@ import track_table from "./ui/track_table";
 import add_files from "./ui/add_files";
 import dropdowns from "./ui/dropdowns";
 import helper from "../helper";
+import new_folder from "./ui/new_folder";
 const { ipcRenderer } = require('electron');
 const electron = require('electron');
 
@@ -73,6 +74,11 @@ let app = {
         dropdowns.init();
 
         /*
+         * Neuer Ordner Button
+         */
+        new_folder.init();
+
+        /*
          * init device selector
          */
         device_select.init(() => {
@@ -131,7 +137,6 @@ let app = {
                 drive: app.device
             },
             success: (folder) => {
-
                 folder_list.setFolders(folder);
                 app.hideMainLoader();
                 if(callback !== undefined) {
